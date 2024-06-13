@@ -1,0 +1,17 @@
+{
+  "name": "requester",
+  "version": "1.0.0",
+  "description": "Given a URL and an interval, Requester will send HTTP requests to the specified URL at the defined intervals.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "tsx": "^4.15.2",
+    "typescript": "^5.4.5"
+  }
+}
