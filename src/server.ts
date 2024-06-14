@@ -1,6 +1,9 @@
 import fastify from 'fastify';
+import { jobsRoute } from './routes/jobs.route';
 
 const app = fastify();
+
+jobsRoute.registerRoutes(app);
 
 app.get('/', () => {
   return { status: 'OK' };
