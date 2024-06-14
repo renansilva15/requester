@@ -1,0 +1,15 @@
+services:
+  db_requester:
+    image: postgres:latest
+    container_name: db_requester
+    environment:
+      POSTGRES_DB: "db_requester"
+      POSTGRES_USER: "user_requester"
+      POSTGRES_PASSWORD: "password_requester"
+    ports:
+      - "5432:5432"
+    volumes:
+      - volume_requester:/var/lib/db/data
+
+volumes:
+  volume_requester:
