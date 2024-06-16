@@ -1,32 +1,53 @@
-import axios from 'axios';
+import { fork, ChildProcess } from 'child_process';
+import { requestWorkerPath } from '../workers/request.worker';
+import { Observer } from './jobs.service';
+import { Job } from '@prisma/client';
 import { prisma } from '../config/prisma';
 
-class RequestsService {
+class RequestsService implements Observer {
+  constructor() {
+    this.requestAll();
+  }
+
+  notify(job: Job): void {
+    this.request(job);
+  }
+
   private runningJobs: number[] = [];
 
-  async request() {
+  private async createChildProcessRequestWorker(job: Job): Promise<void> {
+    if (!this.runningJobs.includes(job.id)) {
+      const child: ChildProcess = fork(requestWorkerPath);
+
+      child.send(job);
+
+      child.on('message', (message: { jobId: number; status: string }) => {
+        if (message.status === 'error') {
+          this.runningJobs = this.runningJobs.filter(
+            (id) => id !== message.jobId,
+          );
+        }
+      });
+
+      this.runningJobs.push(job.id);
+    }
+  }
+
+  private async request(job: Job): Promise<void> {
+    console.log(`request method called with Job ${job.name}`);
+
+    await this.createChildProcessRequestWorker(job);
+  }
+
+  async requestAll(): Promise<void> {
     const jobs = await prisma.job.findMany({
       where: {
         id: { notIn: this.runningJobs },
       },
     });
 
-    console.log({ rjobs: this.runningJobs });
-    console.log({ jobs });
-
     for (const job of jobs) {
-      const intervalId = setInterval(async () => {
-        try {
-          const response = await axios.get(job.url);
-          console.log(response.data);
-        } catch (error) {
-          console.error(`Error fetching URL ${job.url}:`, error);
-          clearInterval(intervalId);
-          this.runningJobs = this.runningJobs.filter((id) => id !== job.id);
-        }
-      }, job.interval);
-
-      this.runningJobs.push(job.id);
+      await this.request(job);
     }
   }
 }

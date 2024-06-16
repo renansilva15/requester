@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { jobsService } from '../services/jobs.service';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { requestsService } from '../services/requests.service';
 
 class JobsController {
   async create(request: FastifyRequest, reply: FastifyReply) {
@@ -9,8 +8,6 @@ class JobsController {
       const createJobDto = request.body as Prisma.JobCreateInput;
 
       const response = await jobsService.create(createJobDto);
-
-      await requestsService.request();
 
       return reply.code(201).send(response);
     } catch (error) {}
@@ -20,6 +17,8 @@ class JobsController {
   async findAll(request: FastifyRequest, reply: FastifyReply) {
     try {
       const response = await jobsService.findAll();
+
+      console.log(response);
 
       return reply.send(response);
     } catch (error) {}
