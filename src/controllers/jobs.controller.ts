@@ -21,8 +21,6 @@ class JobsController {
     try {
       const response = await jobsService.findAll();
 
-      console.log(response);
-
       return reply.send(response);
     } catch (error) {
       handleError(error, reply);
