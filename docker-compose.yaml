@@ -10,6 +10,25 @@ services:
       - "5432:5432"
     volumes:
       - volume_requester:/var/lib/db/data
+    networks:
+      - network_requester
+  
+  app_requester:
+    container_name: app_requester
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    depends_on:
+      - db_requester
+    env_file: .env
+    networks:
+      - network_requester
 
 volumes:
   volume_requester:
+
+networks:
+  network_requester:
+    driver: bridge
