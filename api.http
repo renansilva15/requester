@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:3333
+
+###
+GET {{baseUrl}}
+
+###
+POST {{baseUrl}}/jobs
+Content-Type: application/json
+
+{
+  "name": "Freemailer Api",
+  "url": "https://freemailer-api.onrender.com/api",
+  "interval": 10000
+}
+
+###
+GET {{baseUrl}}/jobs
