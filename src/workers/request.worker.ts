@@ -1,7 +1,10 @@
 import { Job } from '@prisma/client';
 import { handleFetchApiResponse } from '../helpers/handle-fetch-api-response';
 
-export const requestWorkerPath = __filename;
+export const requestWorkPath =
+  process.env.NODE_ENV === 'production'
+    ? 'dist/workers/request.worker.js'
+    : 'src/workers/request.worker.ts';
 
 process.on('message', async (job: Job) => {
   const intervalId = setInterval(async () => {

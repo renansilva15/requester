@@ -1,5 +1,5 @@
 import { fork, ChildProcess } from 'child_process';
-import { requestWorkerPath } from '../workers/request.worker';
+import { requestWorkPath } from '../workers/request.worker';
 import { Observer } from './jobs.service';
 import { Job } from '@prisma/client';
 import { prisma } from '../config/prisma';
@@ -17,7 +17,7 @@ class RequestsService implements Observer {
 
   private async createChildProcessRequestWorker(job: Job): Promise<void> {
     if (!this.runningJobs.includes(job.id)) {
-      const child: ChildProcess = fork(requestWorkerPath);
+      const child: ChildProcess = fork(requestWorkPath);
 
       child.send(job);
 

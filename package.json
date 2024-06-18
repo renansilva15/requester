@@ -4,7 +4,9 @@
   "description": "Given a URL and an interval, Requester will send HTTP requests to the specified URL at the defined intervals.",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts"
+    "dev": "NODE_ENV=development tsx watch src/server.ts",
+    "build": "tsup src",
+    "start": "prisma migrate deploy && NODE_ENV=production node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -18,11 +20,13 @@
     "eslint-plugin-prettier": "^5.1.3",
     "prettier": "^3.3.2",
     "prisma": "^5.15.0",
+    "tsup": "^8.1.0",
     "tsx": "^4.15.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",
+    "dotenv": "^16.4.5",
     "fastify": "^4.27.0",
     "zod": "^3.23.8"
   }
