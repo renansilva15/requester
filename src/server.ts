@@ -1,7 +1,11 @@
+import 'dotenv/config';
 import fastify from 'fastify';
 import { jobsRoute } from './routes/jobs.route';
 
-const app = fastify();
+const HOST = process.env.HOST ?? '0.0.0.0';
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3333;
+
+const app = fastify({ logger: true });
 
 jobsRoute.registerRoutes(app);
 
@@ -9,6 +13,6 @@ app.get('/', () => {
   return { status: 'OK' };
 });
 
-app.listen({ port: 3333 }).then((url) => {
+app.listen({ host: HOST, port: PORT }).then((url) => {
   console.log(`Server listen at ${url}`);
 });
